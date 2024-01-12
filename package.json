@@ -3,12 +3,24 @@
   "version": "0.0.5",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
-  "files": ["lib"],
+  "files": [
+    "lib",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    ".": "./lib/index.js"
+  },
   "scripts": {
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix"
   },
   "devDependencies": {
     "@types/node": "^18.19.0",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.56.0",
     "typescript": "^5.3.3"
   },
   "description": "The nodejs module to split Defold liveupdate archive into multiple archives",
@@ -17,5 +29,9 @@
   "keywords": [
     "defold",
     "liveupdate"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Car3man/defsplitjs"
+  }
 }
