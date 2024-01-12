@@ -1,0 +1,20 @@
+{
+  "name": "defsplitjs",
+  "version": "0.0.1",
+  "description": "The nodejs module to split Defold liveupdate archive into multiple archives",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "defold",
+    "liveupdate"
+  ],
+  "author": "Arthur Klopov",
+  "license": "MIT",
+  "devDependencies": {
+    "@tsconfig/node-lts": "^20.1.1",
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2"
+  }
+}
