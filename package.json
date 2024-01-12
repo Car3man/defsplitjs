@@ -1,19 +1,21 @@
 {
   "name": "defsplitjs",
-  "version": "0.0.3",
-  "description": "The nodejs module to split Defold liveupdate archive into multiple archives",
-  "main": "index.js",
+  "version": "0.0.4",
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": ["lib"],
   "scripts": {
     "build": "npx tsc"
   },
-  "keywords": [
-    "defold",
-    "liveupdate"
-  ],
-  "author": "Arthur Klopov",
-  "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.19.0",
     "typescript": "^5.3.3"
-  }
+  },
+  "description": "The nodejs module to split Defold liveupdate archive into multiple archives",
+  "author": "Arthur Klopov",
+  "license": "MIT",
+  "keywords": [
+    "defold",
+    "liveupdate"
+  ]
 }
