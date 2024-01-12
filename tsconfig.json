@@ -2,14 +2,12 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "allowJs": false,
+    "moduleResolution":"Node",
     "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "lib",
     "declarationMap": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "moduleResolution":"Node"
+    "strict": true
   },
   "include": [
     "src"
