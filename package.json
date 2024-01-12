@@ -1,6 +1,6 @@
 {
   "name": "defsplitjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The nodejs module to split Defold liveupdate archive into multiple archives",
   "main": "index.js",
   "scripts": {
