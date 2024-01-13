@@ -1,6 +1,7 @@
 import { readFile, writeFile } from "fs/promises";
-import { dirname, parse } from "path";
+import { join, dirname, parse } from "path";
 import { loadAsync } from "jszip";
+import JSZip = require("jszip");
 
 type DefoldGraph = DefoldGraphNode[];
 
