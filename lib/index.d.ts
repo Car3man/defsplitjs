@@ -1,13 +1,13 @@
-declare enum SplitMethod {
+export declare enum SplitMethod {
     ByCollections = 0,
     ByGroups = 1
 }
-declare class SplitGroup {
+export declare class SplitGroup {
     name: string;
     collectionNames: string[];
     constructor(name: string, collectionNames: string[]);
 }
-declare class SplitOptions {
+export declare class SplitOptions {
     method: SplitMethod;
     groups: SplitGroup[] | null;
     output: string | null;
@@ -15,5 +15,4 @@ declare class SplitOptions {
     static byGroups(groups: SplitGroup[], output?: string | null): SplitOptions;
 }
 export declare function split(pathToGraph: string, pathToArchive: string, options: SplitOptions): Promise<void>;
-export {};
 //# sourceMappingURL=index.d.ts.map

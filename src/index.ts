@@ -18,42 +18,6 @@ enum DefoldGraphNodeType {
     ExcludedCollectionProxy = "ExcludedCollectionProxy"
 }
 
-enum SplitMethod {
-    ByCollections,
-    ByGroups
-}
-
-class SplitGroup {
-    public name: string;
-    public collectionNames: string[];
-
-    constructor(name: string, collectionNames: string[]) {
-        this.name = name;
-        this.collectionNames = collectionNames;
-    }
-}
-
-class SplitOptions {
-    public method: SplitMethod = SplitMethod.ByCollections;
-    public groups: SplitGroup[]|null = null;
-    public output: string|null = null;
-
-    static byCollections(output: string|null = null): SplitOptions {
-        const options = new SplitOptions();
-        options.method = SplitMethod.ByCollections;
-        options.output = output;
-        return options;
-    }
-
-    static byGroups(groups: SplitGroup[], output: string|null = null): SplitOptions {
-        const options = new SplitOptions();
-        options.method = SplitMethod.ByGroups;
-        options.groups = groups;
-        options.output = output;
-        return options;
-    }
-}
-
 class DefoldResourceAchive {
     public name: string;
     public assets: string[];
@@ -67,50 +31,6 @@ class DefoldResourceAchive {
     } 
 }
 type DefoldSplitDeclaration = Array<DefoldResourceAchive>;
-
-export async function split(pathToGraph: string, pathToArchive: string, options: SplitOptions): Promise<void> {
-    validateSplitOptions(options);
-
-    const graphContent = await readFile(pathToGraph, "utf-8");
-    const graph = JSON.parse(graphContent) as DefoldGraph;
-
-    for (const node of graph) {
-        node.isInMainBundle = node.isInMainBundle || node.isInMainBundle === undefined;
-    }
-
-    let splitDeclaration: DefoldSplitDeclaration;
-    switch (options.method) {
-    case SplitMethod.ByGroups:
-        splitDeclaration = splitByGroups(graph, options.groups!);
-        break;
-    case SplitMethod.ByCollections:
-    default:
-        splitDeclaration = splitByCollections(graph);
-        break;
-    }
-
-    const sourceZipBuffer = await readFile(pathToArchive);
-    const sourceZip = await loadAsync(sourceZipBuffer);
-    const sourceManifestFile = Object.keys(sourceZip.files).find((key) => key.endsWith(".dmanifest"));
-
-    const outputPath = options.output ? options.output : dirname(pathToArchive);
-    for (const archive of splitDeclaration) {
-        const zip = new JSZip();
-        for (const asset of archive.assets) {
-            const sourceAsset = await sourceZip.file(asset)!.async("nodebuffer");
-            zip.file(asset, sourceAsset);
-        }
-        if (sourceManifestFile) {
-            const sourceManifest = await sourceZip.file(sourceManifestFile)!.async("nodebuffer");
-            zip.file(sourceManifestFile, sourceManifest);
-        }
-        const zipPath = join(outputPath, `${archive.name}.zip`);
-        const zipBuffer = await zip.generateAsync({
-            type: "nodebuffer"
-        });
-        await writeFile(zipPath, zipBuffer);
-    }
-}
 
 function validateSplitOptions(options: SplitOptions): void {
     if (options.method === SplitMethod.ByGroups &&
@@ -186,4 +106,84 @@ function findChildrenForNodeRecursive(graph: DefoldGraph, node: DefoldGraphNode)
         }
     }
     return children;
+}
+
+export enum SplitMethod {
+    ByCollections,
+    ByGroups
+}
+
+export class SplitGroup {
+    public name: string;
+    public collectionNames: string[];
+
+    constructor(name: string, collectionNames: string[]) {
+        this.name = name;
+        this.collectionNames = collectionNames;
+    }
+}
+
+export class SplitOptions {
+    public method: SplitMethod = SplitMethod.ByCollections;
+    public groups: SplitGroup[]|null = null;
+    public output: string|null = null;
+
+    static byCollections(output: string|null = null): SplitOptions {
+        const options = new SplitOptions();
+        options.method = SplitMethod.ByCollections;
+        options.output = output;
+        return options;
+    }
+
+    static byGroups(groups: SplitGroup[], output: string|null = null): SplitOptions {
+        const options = new SplitOptions();
+        options.method = SplitMethod.ByGroups;
+        options.groups = groups;
+        options.output = output;
+        return options;
+    }
+}
+
+export async function split(pathToGraph: string, pathToArchive: string, options: SplitOptions): Promise<void> {
+    validateSplitOptions(options);
+
+    const graphContent = await readFile(pathToGraph, "utf-8");
+    const graph = JSON.parse(graphContent) as DefoldGraph;
+
+    for (const node of graph) {
+        node.isInMainBundle = node.isInMainBundle || node.isInMainBundle === undefined;
+    }
+
+    let splitDeclaration: DefoldSplitDeclaration;
+    switch (options.method) {
+    case SplitMethod.ByGroups:
+        splitDeclaration = splitByGroups(graph, options.groups!);
+        break;
+    case SplitMethod.ByCollections:
+    default:
+        splitDeclaration = splitByCollections(graph);
+        break;
+    }
+
+    const sourceZipBuffer = await readFile(pathToArchive);
+    const sourceZip = await loadAsync(sourceZipBuffer);
+    const sourceManifestFile = Object.keys(sourceZip.files).find((key) => key.endsWith(".dmanifest"));
+
+    const outputPath = options.output ? options.output : dirname(pathToArchive);
+    for (const archive of splitDeclaration) {
+        const zip = new JSZip();
+        for (const asset of archive.assets) {
+            const sourceAsset = await sourceZip.file(asset)!.async("nodebuffer");
+            zip.file(asset, sourceAsset);
+        }
+        if (sourceManifestFile) {
+            const sourceManifest = await sourceZip.file(sourceManifestFile)!.async("nodebuffer");
+            zip.file(sourceManifestFile, sourceManifest);
+        }
+        const zipPath = join(outputPath, `${archive.name}.zip`);
+        const zipBuffer = await zip.generateAsync({
+            type: "nodebuffer"
+        });
+        await writeFile(zipPath, zipBuffer);
+    }
 }
