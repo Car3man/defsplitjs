@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "target": "es2016",
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution":"Node",
     "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "lib",
     "declarationMap": true,
+    "sourceMap": true,
     "strict": true
   },
   "include": [

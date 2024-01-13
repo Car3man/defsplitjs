@@ -1,6 +1,6 @@
 {
   "name": "defsplitjs",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
@@ -15,6 +15,9 @@
     "build": "npx tsc",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
   },
   "devDependencies": {
     "@types/node": "^18.19.0",
